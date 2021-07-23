@@ -6,4 +6,14 @@
     <UseWPF>true</UseWPF>
   </PropertyGroup>
 
+  <ItemGroup>
+    <None Remove="music\tetris-gameboy-02.mp3" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Content Include="music\tetris-gameboy-02.mp3">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+  </ItemGroup>
+
 </Project>

@@ -95,10 +95,10 @@ namespace Tetris.Tetrads
         {
             foreach (var s in _shape)
             {
-                //if (s.Y < 0)
-                //{
-                //    continue;
-                //}
+                if (s.Y < 0)
+                {
+                    continue;
+                }
 
                 var _border = new Border
                 {

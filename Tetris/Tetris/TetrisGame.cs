@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Microsoft.Win32;
+using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
@@ -32,6 +33,7 @@ namespace Tetris
         private List<char> _tetradTypes;
 
         private DispatcherTimer _dispatcherTimer;
+        private MediaPlayer _mediaPlayer;
 
         public bool IsRunning { get; set; }
         public bool IsOver { get; set; }
@@ -219,6 +221,11 @@ namespace Tetris
 
         private void ResetGameBoard()
         {
+            _mediaPlayer = new MediaPlayer();
+            _mediaPlayer.MediaEnded += new EventHandler(Media_Ended);
+            _mediaPlayer.Open(new Uri("music/tetris-gameboy-02.mp3", UriKind.Relative));
+            _mediaPlayer.Play();
+
             _board = new GameBoard(_squareHeight, _squareWidth, _squareBorderWidth, ROWS, COLUMNS);
             _pane = new PreviewPane(_squareHeight, _squareWidth, _squareBorderWidth);
             _instructions = new Instructions();
@@ -227,6 +234,12 @@ namespace Tetris
 
             AddTetrad();
             AddTetrad();
+        }
+
+        private void Media_Ended(object sender, EventArgs e)
+        {
+            _mediaPlayer.Position = TimeSpan.Zero;
+            _mediaPlayer.Play();
         }
 
         private void AddTetrad()
