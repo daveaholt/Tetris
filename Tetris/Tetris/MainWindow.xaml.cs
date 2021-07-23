@@ -31,7 +31,7 @@ namespace Tetris
 
         private void Loop(object sender, EventArgs e)
         {
-            if (_game.IsRunning && _stopWatch.ElapsedMilliseconds > FPS_LIMIT)
+            if (_game.IsRunning && !_game.IsOver && _stopWatch.ElapsedMilliseconds > FPS_LIMIT)
             {
                 _stopWatch.Restart();
                 _game.Draw();
@@ -47,22 +47,37 @@ namespace Tetris
                     Close();
                     break;
                 case Key.P:
-                    _game.TogglePause();
+                    if(!_game.IsOver)
+                    {
+                        _game.TogglePause();
+                    }
                     break;
                 case Key.R:
                     _game.Reset();
                     break;
                 case Key.Down:
-                    _game.DownPressed();
+                    if (_game.IsRunning)
+                    {
+                        _game.DownPressed();
+                    }
                     break;
                 case Key.Up:
-                    _game.UpPressed();
+                    if (_game.IsRunning)
+                    {
+                        _game.UpPressed();
+                    }
                     break;
                 case Key.Right:
-                    _game.RightPressed();
+                    if (_game.IsRunning)
+                    {
+                        _game.RightPressed();
+                    }
                     break;
                 case Key.Left:
-                    _game.LeftPressed();
+                    if (_game.IsRunning)
+                    {
+                        _game.LeftPressed();
+                    }
                     break;
             }
         }

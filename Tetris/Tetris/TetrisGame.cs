@@ -18,6 +18,8 @@ namespace Tetris
         private const int _squareWidth = 25;
         private Thickness _squareBorderWidth = new Thickness(1);
 
+        private long _score;
+
         private Canvas _mainCanvas;
         private GameBoard _board;
         private PreviewPane _pane;
@@ -32,6 +34,7 @@ namespace Tetris
         private DispatcherTimer _dispatcherTimer;
 
         public bool IsRunning { get; set; }
+        public bool IsOver { get; set; }
 
         public void Start(Canvas mainCanvas)
         {
@@ -59,6 +62,29 @@ namespace Tetris
             foreach (var t in _gluedSquares)
             {
                 t.Draw(_board.GetCanvas());
+            }
+
+            var title = new TextBlock
+            {
+                Text = $"Score:   {_score}",
+                Foreground = Brushes.DarkSlateGray,
+                FontSize = 24
+            };
+            Canvas.SetLeft(title, 60);
+            Canvas.SetTop(title, 10);
+            _mainCanvas.Children.Add(title);
+
+            if (IsOver)
+            {
+                var textBlock = new TextBlock
+                {
+                    Text = "Game Over",
+                    Foreground = Brushes.IndianRed,
+                    FontSize = 50
+                };
+                Canvas.SetLeft(textBlock, 100);
+                Canvas.SetTop(textBlock, 200);
+                _mainCanvas.Children.Add(textBlock);
             }
         }
 
@@ -113,6 +139,7 @@ namespace Tetris
         public void Reset()
         {
             ResetGameBoard();
+            IsOver = false;
             IsRunning = true;
             StartDispatcher();
         }
@@ -154,6 +181,23 @@ namespace Tetris
                     }
                 }
             }
+            switch (completeRows.Count)
+            {
+                case 1:
+                    _score += 40;
+                    break;
+                case 2:
+                    _score += 100;
+                    break;
+                case 3:
+                    _score += 300;
+                    break;
+                case 4:
+                    _score += 1200;
+                    break;
+                default:
+                    break;
+            }
             Draw();
         }
 
@@ -179,6 +223,7 @@ namespace Tetris
             _pane = new PreviewPane(_squareHeight, _squareWidth, _squareBorderWidth);
             _instructions = new Instructions();
             _gluedSquares = new List<GameSquare>();
+            _score = 0;
 
             AddTetrad();
             AddTetrad();
@@ -205,7 +250,25 @@ namespace Tetris
                 _activeTetrad.RelocateToBoard();
 
                 _onDeckTetrad = CreateTetrad(typeToCreate);
-            }            
+            }
+
+            foreach (var s in _activeTetrad.GetSquares())
+            {
+                if(_gluedSquares.Any(x => x.X == s.X && x.Y == s.Y))
+                {
+                    IsOver = true;
+                    _dispatcherTimer.Stop();
+                    var textBlock = new TextBlock
+                    {
+                        Text = "Game Over",
+                        Foreground = Brushes.IndianRed,
+                        FontSize = 50
+                    };
+                    Canvas.SetLeft(textBlock, 100);
+                    Canvas.SetTop(textBlock, 200);
+                    _mainCanvas.Children.Add(textBlock);
+                }
+            }
         }
 
         private Tetrad CreateTetrad(char c)
