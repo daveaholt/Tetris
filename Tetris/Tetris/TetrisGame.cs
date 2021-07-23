@@ -44,11 +44,6 @@ namespace Tetris
             _tetradTypes.Add('L');
             _tetradTypes.Add('S');
             _tetradTypes.Add('Z');
-
-            _dispatcherTimer = new DispatcherTimer();
-            _dispatcherTimer.Tick += Timer_Tick;
-            _dispatcherTimer.Interval = new TimeSpan(0, 0, 1);
-
             Reset();
         }
 
@@ -69,7 +64,7 @@ namespace Tetris
 
         public void DownPressed()
         {
-            throw new NotImplementedException();
+            DropOne();
         }
 
         public void UpPressed()
@@ -79,12 +74,18 @@ namespace Tetris
 
         public void RightPressed()
         {
-            _activeTetrad.MoveRight();
+            if (!_activeTetrad.CheckCollisionRight(_gluedSquares))
+            {                
+                _activeTetrad.MoveRight();
+            }
         }
 
-        public void LeftPressed()
+        public void LeftPressed() 
         {
-            _activeTetrad.MoveLeft();
+            if (!_activeTetrad.CheckCollisionLeft(_gluedSquares))
+            {
+                _activeTetrad.MoveLeft();
+            }
         }
 
         public void TogglePause()
@@ -101,7 +102,7 @@ namespace Tetris
                 Canvas.SetLeft(textBlock, 100);
                 Canvas.SetTop(textBlock, 200);
                 _mainCanvas.Children.Add(textBlock);
-                _dispatcherTimer.Start();
+                StartDispatcher();
             }
             else
             {
@@ -113,11 +114,62 @@ namespace Tetris
         {
             ResetGameBoard();
             IsRunning = true;
+            StartDispatcher();
+        }
+
+        private void StartDispatcher()
+        {
+            _dispatcherTimer = new DispatcherTimer();
+            _dispatcherTimer.Tick += Timer_Tick;
+            _dispatcherTimer.Interval = new TimeSpan(0, 0, 1);
             _dispatcherTimer.Start();
         }
 
         private void Timer_Tick(object sender, EventArgs e)
         {
+            DropOne();
+            CheckForCompleatedRows();
+        }
+
+        private void CheckForCompleatedRows()
+        {
+            var completeRows = new List<int>();
+            var groupedStuff = _gluedSquares.GroupBy(sq => sq.Y);
+            foreach (var group in groupedStuff.AsEnumerable())
+            {
+                if(group.ToList().Count == COLUMNS)
+                {
+                    completeRows.Add(group.Key);
+                }
+            }
+            _gluedSquares.RemoveAll(s => completeRows.Any(r => r == s.Y));
+
+            foreach (var row in completeRows.OrderBy(x => x))
+            {
+                foreach (var s in _gluedSquares)
+                {
+                    if(s.Y < row)
+                    {
+                        s.Y++;
+                    }
+                }
+            }
+            Draw();
+        }
+
+        private void DropOne()
+        {
+            if (_activeTetrad.ReachedBottom())
+            {
+                _gluedSquares.AddRange(_activeTetrad.GetSquares());
+                AddTetrad();
+            }
+
+            if (_activeTetrad.CheckDownCollision(_gluedSquares))
+            {
+                _gluedSquares.AddRange(_activeTetrad.GetSquares());
+                AddTetrad();
+            }
             _activeTetrad.DropOne();
         }
 
@@ -126,6 +178,8 @@ namespace Tetris
             _board = new GameBoard(_squareHeight, _squareWidth, _squareBorderWidth, ROWS, COLUMNS);
             _pane = new PreviewPane(_squareHeight, _squareWidth, _squareBorderWidth);
             _instructions = new Instructions();
+            _gluedSquares = new List<GameSquare>();
+
             AddTetrad();
             AddTetrad();
         }
