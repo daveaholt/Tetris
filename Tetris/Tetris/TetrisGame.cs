@@ -3,6 +3,7 @@ using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
+using System.Media;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Media;
@@ -171,7 +172,7 @@ namespace Tetris
                     completeRows.Add(group.Key);
                 }
             }
-            _gluedSquares.RemoveAll(s => completeRows.Any(r => r == s.Y));
+            _gluedSquares.RemoveAll(s => completeRows.Any(r => r == s.Y));            
 
             foreach (var row in completeRows.OrderBy(x => x))
             {
@@ -187,15 +188,19 @@ namespace Tetris
             {
                 case 1:
                     _score += 40;
+                    SystemSounds.Asterisk.Play();
                     break;
                 case 2:
                     _score += 100;
+                    SystemSounds.Exclamation.Play();
                     break;
                 case 3:
                     _score += 300;
+                    SystemSounds.Exclamation.Play();
                     break;
                 case 4:
                     _score += 1200;
+                    SystemSounds.Exclamation.Play();
                     break;
                 default:
                     break;
@@ -269,7 +274,13 @@ namespace Tetris
             {
                 if(_gluedSquares.Any(x => x.X == s.X && x.Y == s.Y))
                 {
-                    IsOver = true;
+                    IsOver = true;                    
+                    _mediaPlayer.Stop();
+
+                    var failPlayer = new MediaPlayer();
+                    failPlayer.Open(new Uri("music/fail.wav", UriKind.Relative));
+                    failPlayer.Play();
+
                     _dispatcherTimer.Stop();
                     var textBlock = new TextBlock
                     {

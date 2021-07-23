@@ -7,10 +7,14 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <None Remove="music\fail.wav" />
     <None Remove="music\tetris-gameboy-02.mp3" />
   </ItemGroup>
 
   <ItemGroup>
+    <Content Include="music\fail.wav">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
     <Content Include="music\tetris-gameboy-02.mp3">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
