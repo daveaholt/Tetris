@@ -7,7 +7,7 @@ using System.Windows.Media;
 
 namespace Tetris
 {
-    class PreviewPane
+    public class PreviewPane
     {
         private const int ROWS = 6;
         private const int COLUMNS = 6;
@@ -21,9 +21,14 @@ namespace Tetris
 
         public PreviewPane(int squareHeight, int squareWidth, Thickness squareBorderWidth)
         {
-            this._squareHeight = squareHeight;
-            this._squareWidth = squareWidth;
-            this._squareBorderWidth = squareBorderWidth;
+            _squareHeight = squareHeight;
+            _squareWidth = squareWidth;
+            _squareBorderWidth = squareBorderWidth;
+        }
+
+        public Canvas GetCanvas()
+        {
+            return _pane;
         }
 
         public void Draw(Canvas _mainCanvas)

@@ -1,6 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
+﻿using System.Collections.Generic;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Media;
@@ -8,27 +6,34 @@ using System.Windows.Media;
 namespace Tetris
 {
     class GameBoard
-    {
-        private const int ROWS = 21;
-        private const int COLUMNS = 10;              
+    {           
 
         private Canvas _board;
         private List<GameSquare> _squares;
         private int _squareHeight;
         private int _squareWidth;
         private Thickness _squareBorderWidth;
+        private int _rows;
+        private int _columns;
 
-        public GameBoard(int squareHeight, int squareWidth, Thickness squareBorderWidth)
+        public GameBoard(int squareHeight, int squareWidth, Thickness squareBorderWidth, int rows, int columns)
         {
-            this._squareHeight = squareHeight;
-            this._squareWidth = squareWidth;
-            this._squareBorderWidth = squareBorderWidth;
+            _squareHeight = squareHeight;
+            _squareWidth = squareWidth;
+            _squareBorderWidth = squareBorderWidth;
+            _rows = rows;
+            _columns = columns;
+        }
+
+        public Canvas GetCanvas()
+        {
+            return _board;
         }
 
         public void Draw(Canvas _mainCanvas)
         {
-            var boardWidth = _squareWidth * COLUMNS;
-            var boardHeight = _squareHeight * ROWS;
+            var boardWidth = _squareWidth * _columns;
+            var boardHeight = _squareHeight * _rows;
 
             _squares = new List<GameSquare>();
 
@@ -42,9 +47,9 @@ namespace Tetris
             Canvas.SetLeft(_board, 50);
             _mainCanvas.Children.Add(_board);
 
-            for (int y = 0; y < ROWS; y++)
+            for (int y = 0; y < _rows; y++)
             {
-                for (int x = 0; x < COLUMNS; x++)
+                for (int x = 0; x < _columns; x++)
                 {
                     var s = new GameSquare(x, y, _squareHeight, _squareWidth, _squareBorderWidth);
                     _squares.Add(s);

@@ -5,7 +5,7 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:Tetris"
         mc:Ignorable="d"
-        Title="Tetris" Height="800" Width="550" KeyDown="keyDown">
+        Title="Tetris" Height="660" Width="550" KeyDown="keyDown">
     <Canvas Name="MainCanvas" Background="CadetBlue">
 
     </Canvas>

@@ -1,19 +1,8 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Diagnostics;
-using System.Linq;
-using System.Text;
-using System.Threading;
-using System.Threading.Tasks;
 using System.Windows;
-using System.Windows.Controls;
-using System.Windows.Data;
-using System.Windows.Documents;
 using System.Windows.Input;
 using System.Windows.Media;
-using System.Windows.Media.Imaging;
-using System.Windows.Navigation;
-using System.Windows.Shapes;
 
 namespace Tetris
 {
@@ -45,7 +34,6 @@ namespace Tetris
             if (_game.IsRunning && _stopWatch.ElapsedMilliseconds > FPS_LIMIT)
             {
                 _stopWatch.Restart();
-                _game.Update();
                 _game.Draw();
             }
         }
@@ -58,8 +46,8 @@ namespace Tetris
                     _game.IsRunning = false;
                     Close();
                     break;
-                case Key.S:
-                    _game.IsRunning = false;
+                case Key.P:
+                    _game.TogglePause();
                     break;
                 case Key.R:
                     _game.Reset();

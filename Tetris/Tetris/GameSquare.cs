@@ -1,7 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-using System.Windows;
+﻿using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Media;
 
@@ -54,7 +51,7 @@ namespace Tetris
 
             var _s = new Canvas
             {
-                Background = Brushes.White,
+                Background = BackgroundColor,
                 Height = Height,
                 Width = Width
             };
