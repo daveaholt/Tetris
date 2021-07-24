@@ -287,7 +287,7 @@ namespace Tetris
                         Text = "Game Over",
                         Foreground = Brushes.IndianRed,
                         FontSize = 50
-                    };
+                    }; 
                     Canvas.SetLeft(textBlock, 100);
                     Canvas.SetTop(textBlock, 200);
                     _mainCanvas.Children.Add(textBlock);
